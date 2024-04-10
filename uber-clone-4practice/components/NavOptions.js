@@ -2,6 +2,9 @@ import { FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from 'react
 import React from 'react'
 import tw from 'twrnc';
 import { Icon } from '@rneui/base';
+import { useNavigation } from '@react-navigation/native';
+import { useSelector } from 'react-redux';
+import { selectOrigin } from '../slices/navSlice';
 
 const data = [
     {
@@ -14,11 +17,14 @@ const data = [
         id: '456',
         title: 'Order Food',
         image: "https://links.papareact.com/28w",
-        screen: "EatsScreen",
+        screen: "EatScreen",
     },
 ]
 
 const NavOptions = () => {
+    const navigation = useNavigation()
+    const origin = useSelector(selectOrigin)
+
     return (
         <FlatList
             data={data}
@@ -27,8 +33,10 @@ const NavOptions = () => {
             renderItem={({ item }) => (
                 <TouchableOpacity
                     style={tw`p-2, pl-6 pb-8 pt-4 bg-gray-200 m-2 w-40`}
+                    onPress={() => navigation.navigate(item.screen)}
+                    disabled={!origin}
                 >
-                    <View>
+                    <View style={tw`${!origin && 'opacity-20'}`}>
                         <Image
                             style={{ width: 120, height: 120, resizeMode: "contain" }}
                             source={{ uri: item.image }}
